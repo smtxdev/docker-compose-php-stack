@@ -1,0 +1,13 @@
+{
+    "name": "smtxdev/docker-compose-php-stack",
+    "type": "project",
+    "authors": [
+        {
+            "name": "smtxdev",
+            "email": "smt.xdev@gmail.com"
+        }
+    ],
+    "require": {
+        "oomphinc/composer-installers-extender": "^1.1"
+    }
+}

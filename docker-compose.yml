@@ -1,0 +1,83 @@
+version: '3.7'
+
+volumes:
+  mysql-data:
+  mail-data:
+  solr-data:
+
+services:
+  db:
+    image: smtxdev/mariadb:${MARIADB_VERSION}
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MYSQL_ALLOW_EMPTY_PASSWORD: ${DB_ALLOW_EMPTY_PASSWORD}
+      TZ: ${TZ}
+    ports:
+      - 3306:3306
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ./config/mysql.cnf:/etc/mysql/zzz-mysql.cnf:ro
+      - ./import/db/:/import/db
+
+  proxy:
+    image: smtxdev/nginx:${NGINX_VERSION}
+    restart: unless-stopped
+    environment:
+      SSL_CERT_NAME: ${SSL_CERT_NAME}
+      SSL_REDIRECT: ${SSL_REDIRECT}
+      TZ: ${TZ}
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ./config/nginx.conf:/etc/nginx/conf.d/zzz-default.conf:ro
+    depends_on:
+      - app
+
+  app:
+    image: smtxdev/php-apache:${PHP_VERSION}
+    restart: unless-stopped
+    environment:
+      TZ: ${TZ}
+    volumes:
+      - ./config/php.ini:/usr/local/etc/php/conf.d/zzz-php.ini:ro
+      - ./config/vhost.conf:/etc/apache2/sites-enabled/zzz-default.conf:ro
+      - ../:/var/www/html
+      - ./.env:/.env
+
+  mail:
+    image: smtxdev/postfix:${POSTFIX_VERSION}
+    restart: unless-stopped
+    environment:
+      MAILNAME: ${MAIL_NAME_FQDN}
+      MAIL_RELAYHOST: ${MAIL_RELAYHOST}
+      TZ: ${TZ}
+    volumes:
+      - ./config/mail.conf:/etc/service/postfix/run.initialization:ro
+      - mail-data:/var/spool/postfix
+
+  solr:
+    image: solr:${SOLR_VERSION}
+    restart: unless-stopped
+    ports:
+      - 8983:8983
+    environment:
+      VIRTUAL_HOST: ${SOLR_NAME}
+      HTTP_EXPOSE: 8983
+      TZ: ${TZ}
+    entrypoint:
+      - docker-entrypoint.sh
+      - solr-precreate
+      - core
+    volumes:
+      - solr-data:/opt/solr/server/solr/core
+
+  hostmanager:
+    image: smtxdev/hostmanager:${HOSTMANAGER_VERSION}
+    restart: "no"
+    environment:
+      TZ: ${TZ}
+    volumes:
+      - ${HOSTMACHINE_MAIN_DRIVE_ROOT}:/host/
+      - ./.env:/.env
