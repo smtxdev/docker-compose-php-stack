@@ -9,6 +9,8 @@ composer config repositories.repo-name vcs https://github.com/smtxdev/docker-com
 composer require smtxdev/docker-compose-php-stack:dev-master
 ```
 
+Remove from all *.sample files in the config-folder the suffix `.sample`.
+
 Add these lines to define the install-location of this package (highly recommend otherwise this package will be installed into `vendor` and you don't want your docker stack in the `vendor` folder):
 
 ```
