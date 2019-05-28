@@ -1,6 +1,5 @@
 .DS_Store
 .idea/
 images/
-.env
 vendor/
 docker-compose-dev.yml
