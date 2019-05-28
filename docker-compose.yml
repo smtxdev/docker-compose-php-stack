@@ -43,7 +43,7 @@ services:
     volumes:
       - ./config/php.ini:/usr/local/etc/php/conf.d/zzz-php.ini:ro
       - ./config/vhost.conf:/etc/apache2/sites-enabled/zzz-default.conf:ro
-      - ../:/var/www/html
+      - ${COMPOSE_MOUNT}:/var/www/html
       - ./.env:/.env
 
   mail:
