@@ -16,9 +16,9 @@ services:
     ports:
       - 3306:3306
     volumes:
-      - mysql-data:/var/lib/mysql
-      - ./config/mysql.cnf:/etc/mysql/zzz-mysql.cnf:ro
-      - ./import/db/:/import/db
+      - mysql-data:/var/lib/mysql:delegated
+      - ./config/mysql.cnf:/etc/mysql/zzz-mysql.cnf:ro,cached
+      - ./import/db/:/import/db:cached
 
   proxy:
     image: smtxdev/nginx:${NGINX_VERSION}
@@ -31,7 +31,7 @@ services:
       - 80:80
       - 443:443
     volumes:
-      - ./config/nginx.conf:/etc/nginx/conf.d/zzz-default.conf:ro
+      - ./config/nginx.conf:/etc/nginx/conf.d/zzz-default.conf:ro,cached
     depends_on:
       - app
 
@@ -41,10 +41,10 @@ services:
     environment:
       TZ: ${TZ}
     volumes:
-      - ./config/php.ini:/usr/local/etc/php/conf.d/zzz-php.ini:ro
-      - ./config/vhost.conf:/etc/apache2/sites-enabled/zzz-default.conf:ro
-      - ${COMPOSE_MOUNT}:/var/www/html
-      - ./.env:/.env
+      - ./config/php.ini:/usr/local/etc/php/conf.d/zzz-php.ini:ro,cached
+      - ./config/vhost.conf:/etc/apache2/sites-enabled/zzz-default.conf:ro,cached
+      - ${COMPOSE_MOUNT}:/var/www/html:cached
+      - ./.env:/.env:cached
 
   mail:
     image: smtxdev/postfix:${POSTFIX_VERSION}
@@ -54,8 +54,8 @@ services:
       MAIL_RELAYHOST: ${MAIL_RELAYHOST}
       TZ: ${TZ}
     volumes:
-      - ./config/mail.conf:/etc/service/postfix/run.initialization:ro
-      - mail-data:/var/spool/postfix
+      - ./config/mail.conf:/etc/service/postfix/run.initialization:ro,cached
+      - mail-data:/var/spool/postfix:delegated
 
   solr:
     image: solr:${SOLR_VERSION}
@@ -71,7 +71,7 @@ services:
       - solr-precreate
       - core
     volumes:
-      - solr-data:/opt/solr/server/solr/core
+      - solr-data:/opt/solr/server/solr/core:delegated
 
   hostmanager:
     image: smtxdev/hostmanager:${HOSTMANAGER_VERSION}
@@ -79,5 +79,5 @@ services:
     environment:
       TZ: ${TZ}
     volumes:
-      - ${HOSTMACHINE_MAIN_DRIVE_ROOT}:/host/
-      - ./.env:/.env
+      - ${HOSTMACHINE_MAIN_DRIVE_ROOT}:/host/:cached
+      - ./.env:/.env:cached
