@@ -66,12 +66,9 @@ services:
       VIRTUAL_HOST: ${SOLR_NAME}
       HTTP_EXPOSE: 8983
       TZ: ${TZ}
-    entrypoint:
-      - docker-entrypoint.sh
-      - solr-precreate
-      - core
     volumes:
-      - solr-data:/opt/solr/server/solr/core:delegated
+      - ${SOLR_LOCAL_CONFIG_DIR}:${SOLR_CONTAINER_CONFIG_DIR}:cached
+      - solr-data:${SOLR_DATA_DIR}:delegated
 
   hostmanager:
     image: smtxdev/hostmanager:${HOSTMANAGER_VERSION}
