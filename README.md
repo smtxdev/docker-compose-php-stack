@@ -5,7 +5,6 @@
 
 ```
 composer init # if you not have a composer.json
-composer config repositories.repo-name vcs https://github.com/smtxdev/docker-compose-php-stack.git
 # Add `scripts` and `extra` infos as mentioned below then execute:
 composer require smtxdev/docker-compose-php-stack:dev-master
 ```
