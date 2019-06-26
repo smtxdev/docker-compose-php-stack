@@ -52,3 +52,17 @@ Full-Example `composer.json`
 cd docker
 docker-compose up -d
 ```
+
+## Add files to .gitignore to commit config files
+
+For example:
+
+```
+/docker/*
+!/docker/.env
+!/docker/*/
+/docker/config/solr/empty
+/docker/import/*
+```
+
+Assuming your `docker-install-dir` is `./docker`. At first let us ignore everything from `/docker/*` then let us unignore the config file: `!/docker/.env`. Unignore everything in the second level with: `!/docker/*/` then ignore again not needed files: `/docker/config/solr/empty` and `/docker/import/*`. With this `.gitignore` you can commit all configs in your repo and you can still update this package. Keep track of this README maybe you need to add/remove some statements in the future.
