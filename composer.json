@@ -7,6 +7,9 @@
             "email": "smt.xdev@gmail.com"
         }
     ],
+    "autoload": {
+        "psr-4": {"SmtXDev\\DockerComposePhpStack\\": "./"}
+    },
     "require": {
         "oomphinc/composer-installers-extender": "^1.1"
     }
