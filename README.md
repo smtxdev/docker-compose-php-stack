@@ -29,12 +29,6 @@ Full-Example `composer.json`
     "require": {
         "smtxdev/docker-compose-php-stack": "dev-master"
     },
-    "repositories": {
-        "repo-name": {
-            "type": "vcs",
-            "url": "https://github.com/smtxdev/docker-compose-php-stack.git"
-        }
-    },
     "scripts": {
         "post-autoload-dump": [
             "SmtXDev\\DockerComposePhpStack\\Installer::install"
