@@ -6,19 +6,20 @@
 ```
 composer init # if you not have a composer.json
 composer config repositories.repo-name vcs https://github.com/smtxdev/docker-compose-php-stack.git
+# Add `scripts` and `extra` infos as mentioned below then execute:
 composer require smtxdev/docker-compose-php-stack:dev-master
 ```
 
-Remove from all *.sample files in the config-folder the suffix `.sample`.
-
-Add these lines to define the install-location of this package (highly recommend otherwise this package will be installed into `vendor` and you don't want your docker stack in the `vendor` folder):
+Add these lines to your root composer.json to define the install-location of this package (otherwise this package will not work correctly). Composer will install everything to the `vendor` folder. The following post-install-script (post-autoload-dump) will copy all files to your desired location. You can install and update this package normaly like every other package but do not use this package from the `vendor` folder. Only from the directory you configured in `docker-install-dir`.
 
 ```
+"scripts": {
+    "post-autoload-dump": [
+        "SmtXDev\\DockerComposePhpStack\\Installer::install"
+    ]
+},
 "extra": {
-    "installer-types": ["project"],
-    "installer-paths": {
-        "./docker/": ["smtxdev/docker-compose-php-stack"]
-    }
+    "docker-install-dir": "./docker"
 }
 ```
 
@@ -35,11 +36,13 @@ Full-Example `composer.json`
             "url": "https://github.com/smtxdev/docker-compose-php-stack.git"
         }
     },
+    "scripts": {
+        "post-autoload-dump": [
+            "SmtXDev\\DockerComposePhpStack\\Installer::install"
+        ]
+    },
     "extra": {
-        "installer-types": ["project"],
-        "installer-paths": {
-            "./docker/": ["smtxdev/docker-compose-php-stack"]
-        }
+        "docker-install-dir": "./docker"
     }
 }
 ```
@@ -48,6 +51,5 @@ Full-Example `composer.json`
 
 ```
 cd docker
-cp .env.sample .env
 docker-compose up -d
 ```
