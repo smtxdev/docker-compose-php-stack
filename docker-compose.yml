@@ -22,6 +22,7 @@ services:
       - mysql-data:/var/lib/mysql:delegated
       - ./config/mysql.cnf:/etc/mysql/zzz-mysql.cnf:ro,cached
       - ./import/db/:/import/db:cached
+    command: ['mysqld', '--character-set-server=${DB_CHARACTER_SET_SERVER}', '--collation-server=${DB_COLLATION_SERVER}']
 
   proxy:
     image: smtxdev/nginx:${NGINX_VERSION}
