@@ -48,6 +48,7 @@ services:
       - ./config/php.ini:/usr/local/etc/php/conf.d/zzz-php.ini:ro,cached
       - ./config/vhost.conf:/etc/apache2/sites-enabled/zzz-default.conf:ro,cached
       - ${COMPOSE_MOUNT}:/var/www/html:cached
+      - ${ADDITIONAL_MOUNT1_SOURCE}:${ADDITIONAL_MOUNT1_TARGET}:cached
       - ./.env:/.env:cached
 
   mail:
